@@ -15,6 +15,54 @@ public class MemberRepository {
         this.emf = emf;
     }
 
+    public void updatePassword(long id, String password) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Member member = em.find(Member.class, id); // 멤버를 불러옴 -> 영속성 컨텍스트
+            // <- 스냅샷. 이 상태와 이후 상태가 어떻게 변했는지를 체크.
+            member.setPassword(password); // 속성을 바꾸면 -> 바꾼 상태에서 영속성 컨텍스트.
+            tx.commit(); // 반영이 됨. -> 변경된 필드에 대한 update문이 작성됨.
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("멤버 수정 실패");
+        } finally {
+            em.close();
+        }
+    }
+
+    // 1) id -> 수정할 개별 값
+    // 2) id가 동일한 객체를 넣어서 나머지 값을 덮어씌우기
+    public void update(Member member) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            em.merge(member); // id가 일치하는 엔터티에 대해 나머지 값들을 덮어씌우는 형태
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("멤버 수정 실패");
+        } finally {
+            em.close();
+        }
+    }
+
+    public Member findById(Long id) {
+        EntityManager em = emf.createEntityManager();
+        try {
+            // '객체'를 키로 집어넣어야함 (JPA -> PK. int, long -> Integer, Long)
+            return em.find(Member.class, id);
+            // Member -> @Entity
+            // id -> @Id
+        } catch (Exception e) {
+            throw new RuntimeException("멤버 개별 조회 실패 : %d".formatted(id));
+        } finally {
+            em.close();
+        }
+    }
+
     public List<Member> findAll() {
         EntityManager em = emf.createEntityManager();
         // JPA -> 단위가 Entity 1개 -> Table.

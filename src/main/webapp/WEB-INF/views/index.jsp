@@ -16,6 +16,7 @@
             <p>유저번호 : <%= m.getMemberId() %></p>
             <p>유저네임 : <%= m.getUsername() %></p>
             <p>생성일시 : <%= m.getCreatedAt() %></p>
+            <a href="<%= request.getContextPath()%>/<%= m.getMemberId()%>">개별 페이지로</a>
         </div>
     <% } %>
 
