@@ -24,6 +24,10 @@
         <button>변경</button>
     </form>
 
+    <form method="post" action="<%= request.getContextPath() %>/<%= m.getMemberId() %>/delete">
+        <button>삭제</button>
+    </form>
+
     <div>
         <p>유저번호 : <%= m.getMemberId() %></p>
         <p>유저네임 : <%= m.getUsername() %></p>

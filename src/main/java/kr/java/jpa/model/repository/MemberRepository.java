@@ -15,6 +15,22 @@ public class MemberRepository {
         this.emf = emf;
     }
 
+    public void delete(long id) {
+        EntityManager em = emf.createEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Member member = em.find(Member.class, id);
+            em.remove(member);
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw new RuntimeException("멤버 삭제 실패");
+        } finally {
+            em.close();
+        }
+    }
+
     public void updatePassword(long id, String password) {
         EntityManager em = emf.createEntityManager();
         EntityTransaction tx = em.getTransaction();

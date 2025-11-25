@@ -22,6 +22,13 @@ public class MainController {
         return "detail";
     }
 
+    @PostMapping("/{id}/delete")
+    public String delete(
+            @PathVariable("id") long id) {
+        memberRepository.delete(id);
+        return "redirect:/";
+    }
+
     @PostMapping("/{id}/password")
     public String updatePassword(
             @PathVariable("id") long id,
