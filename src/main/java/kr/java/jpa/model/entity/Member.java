@@ -18,7 +18,7 @@ public class Member {
     @Column(nullable = false) // NOT NULL
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "created_at")
     private LocalDateTime createdAt;
 
     // JPA -> 기본 생성자 -> Setting
