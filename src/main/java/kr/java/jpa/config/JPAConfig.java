@@ -55,7 +55,8 @@ public class JPAConfig {
         // MySQL 연결을 위한 세팅
         props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
         // 스키마 자동 업데이트 전략
-        props.setProperty("hibernate.hbm2ddl.auto", "create");
+//        props.setProperty("hibernate.hbm2ddl.auto", "create");
+        props.setProperty("hibernate.hbm2ddl.auto", "update");
         // create ?, create-drop ?, [update***], [validate, none]
 
         // SQL 자동 포맷팅
