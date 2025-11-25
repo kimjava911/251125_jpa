@@ -4,7 +4,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.jca.support.LocalConnectionFactoryBean;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -41,14 +40,28 @@ public class JPAConfig {
         // DB 설정
         emf.setDataSource(dataSource());
         // 엔터티 스캔할 패키지를 지정
-        emf.setPackagesToScan("kr.java.jpa.entity");
+        emf.setPackagesToScan("kr.java.jpa.model.entity");
         // Hibernate 구현체로 지정
         HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+
+        // DDL 자동 생성 활성화
+        adapter.setGenerateDdl(true);
+        // 로그 출력
+        adapter.setShowSql(true);
 
         emf.setJpaVendorAdapter(adapter);
 
         Properties props = new Properties();
-        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL8Dialect");
+        // MySQL 연결을 위한 세팅
+        props.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
+        // 스키마 자동 업데이트 전략
+        props.setProperty("hibernate.hbm2ddl.auto", "create");
+        // create ?, create-drop ?, [update***], [validate, none]
+
+        // SQL 자동 포맷팅
+        props.setProperty("hibernate.format_sql", "true");
+        // SQL 엔터티 주석 추가
+        props.setProperty("hibernate.use_sql_comments", "true");
 
         emf.setJpaProperties(props);
         return emf;
